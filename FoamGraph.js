@@ -1,4 +1,5 @@
 
+
 let canvas;
 let ctx;
 let resizeObserver;
@@ -45,12 +46,30 @@ const MAX_SPEED = 100;
 
 let connectionsHighlighted = "rgba(200, 200, 200, 0.9)";
 let connectionNonSelected = "rgba(184, 184, 184, 0.35)";
-
-
+/* Example:
+    {
+        id: "parser",
+        title: "Parser",
+        parentId: "inspector",
+        color: "#b9b9b9",
+        size: 6,
+        links: ["files", "metadata", "syntax", "validation", "formats"]
+    },
+    { id: "files", title: "File Parser", parentId: "parser", color: "#34d399", size: 4 },
+    { id: "metadata", title: "Metadata", parentId: "parser", color: "#34d399", size: 4 },
+    { id: "syntax", title: "Syntax", parentId: "parser", color: "#34d399", size: 4 },
+    { id: "validation", title: "Validation", parentId: "parser", color: "#34d399", size: 4 },
+    { id: "formats", title: "Formats", parentId: "parser", color: "#34d399", size: 4 },
+*/
+const notes = [
+    
+];
 
 const graphLinks = [];
 
-
+// --------------------------------------------------
+// GRAPH DATA API
+// --------------------------------------------------
 
 function findNode(id) {
     return notes.find(node => node.id === id);
@@ -137,6 +156,9 @@ export function pushNode(input) {
     const node = ensureNode(properties.id);
 
     Object.assign(node, properties);
+    if (input.label != null && input.title == null) {
+        node.title = input.label;
+    }
     node.placeholder = false;
 
     if (node.parentId != null) {
@@ -176,7 +198,9 @@ export function pushNode(input) {
     return node;
 }
 
-
+// --------------------------------------------------
+// CONNECTIONS
+// --------------------------------------------------
 
 function getConnections() {
     const nodeMap = new Map(notes.map(node => [node.id, node]));
@@ -215,7 +239,9 @@ function getConnections() {
     return connections;
 }
 
-
+// --------------------------------------------------
+// GRAPH REFRESH
+// --------------------------------------------------
 
 function refreshGraph() {
     if (!canvas || !ctx || !canvas.isConnected) return;
@@ -224,6 +250,9 @@ function refreshGraph() {
     drawGraph();
 }
 
+// --------------------------------------------------
+// CIRCULAR BRANCHING LAYOUT
+// --------------------------------------------------
 
 function getNodeRadius(node) {
     return Number.isFinite(node.size) && node.size > 0
@@ -433,9 +462,12 @@ function initializePositions() {
     }
 }
 
+// --------------------------------------------------
+// INITIALIZATION
+// --------------------------------------------------
 
 export function initializeInspector() {
-    const container = document.getElementById("inspector-container");
+    const container = document.getElementById("foam-graph");
 
     if (!container) {
         console.error("Graph container not found.");
@@ -499,9 +531,7 @@ export function initializeInspector() {
                     <span class="obsidian-counter"></span>
                 </div>
 
-                <div class="obsidian-help">
-                    Drag notes · Space + drag to pan · Scroll to zoom
-                </div>
+
             </div>
 
             <div class="obsidian-footer">
@@ -587,208 +617,197 @@ function addGraphStyles() {
     const style = document.createElement("style");
     style.id = "obsidian-graph-styles";
 
-style.textContent = `
-.obsidian-graph {
-    --graph-bg: radial-gradient(
-        ellipse at center,
-        #050505 0%,
-        #0d1117 55%,
-        #18232d 100%
-    );
-}
-        --graph-panel: #050505;
-        --graph-border: #30363d;
-        --graph-text: #dcddde;
-        --graph-muted: #999;
-        --graph-blue: #7f6df2;
-        --graph-surface: #18232d;
+    style.textContent = `
+        .obsidian-graph {
+            --graph-bg: #050505;
+            --graph-panel: #050505;
+            --graph-border: #30363d;
+            --graph-text: #dcddde;
+            --graph-muted: #999;
+            --graph-blue: #7f6df2;
+            --graph-surface: #18232d;
 
-        width: 100%;
-        overflow: hidden;
-        color: var(--graph-text);
-        background: var(--graph-bg);
-        border: 1px solid var(--graph-border);
-        border-radius: 8px;
-        font-family: Arial, sans-serif;
-    }
+            width: 100%;
+            height: 100%;
+            min-width: 0;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            color: var(--graph-text);
+            background: var(--graph-bg);
+            border: 1px solid var(--graph-border);
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+        }
 
-    .obsidian-graph * {
-        box-sizing: border-box;
-    }
+        .obsidian-graph *,
+        .obsidian-graph *::before,
+        .obsidian-graph *::after {
+            box-sizing: border-box;
+        }
 
-    .obsidian-toolbar {
-        min-height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 8px 14px;
-        background: var(--graph-panel);
-        border-bottom: 1px solid var(--graph-border);
-    }
-
-    .obsidian-heading {
-        color: var(--graph-text);
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .obsidian-controls {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .obsidian-controls button {
-        min-width: 29px;
-        height: 28px;
-        padding: 0 8px;
-        color: var(--graph-text);
-        background: var(--graph-surface);
-        border: 1px solid var(--graph-border);
-        border-radius: 5px;
-        font-size: 12px;
-        cursor: pointer;
-        transition: background 150ms ease, border-color 150ms ease;
-    }
-
-    .obsidian-controls button:hover {
-        background: var(--graph-border);
-        border-color: var(--graph-muted);
-    }
-
-    .obsidian-controls button:focus-visible,
-    .obsidian-label-toggle select:focus-visible {
-        outline: 1px solid var(--graph-blue);
-        outline-offset: 2px;
-    }
-
-    .obsidian-label-toggle {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        color: var(--graph-muted);
-        font-size: 11px;
-        white-space: nowrap;
-    }
-
-    .obsidian-label-toggle select {
-        max-width: 115px;
-        height: 28px;
-        padding: 0 6px;
-        color: var(--graph-text);
-        background: var(--graph-surface);
-        border: 1px solid var(--graph-border);
-        border-radius: 5px;
-        font-size: 11px;
-        cursor: pointer;
-    }
-
-    .obsidian-label-toggle select:hover {
-        border-color: var(--graph-muted);
-    }
-
-    .obsidian-zoom {
-        min-width: 43px;
-        color: var(--graph-muted);
-        font-size: 11px;
-        text-align: center;
-    }
-
-    .obsidian-viewport {
-        position: relative;
-        height: clamp(400px, 62vh, 680px);
-        min-height: 350px;
-        overflow: hidden;
-        background: var(--graph-bg);
-    }
-
-    .obsidian-canvas {
-        display: block;
-        width: 100%;
-        height: 100%;
-        touch-action: none;
-        cursor: grab;
-        outline: none;
-    }
-
-    .obsidian-canvas:active {
-        cursor: grabbing;
-    }
-
-    .obsidian-status {
-        position: absolute;
-        top: 13px;
-        left: 14px;
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        color: var(--graph-muted);
-        font-size: 10px;
-        pointer-events: none;
-    }
-
-    .obsidian-status-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--graph-blue);
-    }
-
-    .obsidian-help {
-        position: absolute;
-        bottom: 12px;
-        left: 13px;
-        color: var(--graph-muted);
-        font-size: 10px;
-        pointer-events: none;
-    }
-
-    .obsidian-footer {
-        min-height: 38px;
-        display: flex;
-        align-items: center;
-        padding: 9px 14px;
-        background: var(--graph-panel);
-        border-top: 1px solid var(--graph-border);
-        font-size: 11px;
-        color: var(--graph-muted);
-    }
-
-    .obsidian-selection {
-        overflow: hidden;
-        color: var(--graph-text);
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    @media (max-width: 600px) {
         .obsidian-toolbar {
-            padding: 8px;
-            flex-wrap: wrap;
+            flex: 0 0 auto;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 14px;
+            background: var(--graph-panel);
+            border-bottom: 1px solid var(--graph-border);
+        }
+
+        .obsidian-heading {
+            color: var(--graph-text);
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .obsidian-controls {
-            flex-wrap: wrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .obsidian-controls button {
+            min-width: 29px;
+            height: 28px;
+            padding: 0 8px;
+            color: var(--graph-text);
+            background: var(--graph-surface);
+            border: 1px solid var(--graph-border);
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 150ms ease, border-color 150ms ease;
+        }
+
+        .obsidian-controls button:hover {
+            background: var(--graph-border);
+            border-color: var(--graph-muted);
+        }
+
+        .obsidian-controls button:focus-visible,
+        .obsidian-label-toggle select:focus-visible {
+            outline: 1px solid var(--graph-blue);
+            outline-offset: 2px;
+        }
+
+        .obsidian-label-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--graph-muted);
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .obsidian-label-toggle select {
+            max-width: 115px;
+            height: 28px;
+            padding: 0 6px;
+            color: var(--graph-text);
+            background: var(--graph-surface);
+            border: 1px solid var(--graph-border);
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .obsidian-label-toggle select:hover {
+            border-color: var(--graph-muted);
+        }
+
+        .obsidian-zoom {
+            min-width: 43px;
+            color: var(--graph-muted);
+            font-size: 11px;
+            text-align: center;
         }
 
         .obsidian-viewport {
-            height: 470px;
+            position: relative;
+            flex: 1 1 0;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            background: var(--graph-bg);
         }
 
-        .obsidian-help {
-            max-width: calc(100% - 24px);
-            line-height: 1.6;
+        .obsidian-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            cursor: grab;
+            outline: none;
         }
-    }
-`;
 
-document.head.appendChild(style);
+        .obsidian-canvas:active {
+            cursor: grabbing;
+        }
+
+        .obsidian-status {
+            position: absolute;
+            top: 13px;
+            left: 14px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--graph-muted);
+            font-size: 10px;
+            pointer-events: none;
+        }
+
+        .obsidian-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--graph-blue);
+        }
+
+        .obsidian-footer {
+            flex: 0 0 auto;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            padding: 9px 14px;
+            background: var(--graph-panel);
+            border-top: 1px solid var(--graph-border);
+            font-size: 11px;
+            color: var(--graph-muted);
+        }
+
+        .obsidian-selection {
+            overflow: hidden;
+            color: var(--graph-text);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 600px) {
+            .obsidian-toolbar {
+                padding: 8px;
+                flex-wrap: wrap;
+            }
+
+            .obsidian-controls {
+                flex-wrap: wrap;
+            }
+        }
+    `;
 
     document.head.appendChild(style);
+
+
+
 }
 
-
+// --------------------------------------------------
+// RESIZE
+// --------------------------------------------------
 
 function resizeCanvas() {
     if (!canvas || !ctx) return;
@@ -804,7 +823,9 @@ function resizeCanvas() {
     drawGraph();
 }
 
-
+// --------------------------------------------------
+// WATER PHYSICS
+// --------------------------------------------------
 
 function updatePhysics(dt) {
     const step = Math.min(dt / 16.667, 2);
@@ -849,7 +870,7 @@ function updatePhysics(dt) {
         node.vy += fy * step;
     }
 
-
+    // Size-dependent springs between connected nodes.
     for (const { source, target } of connections) {
         const dx = target.x - source.x;
         const dy = target.y - source.y;
@@ -876,7 +897,7 @@ function updatePhysics(dt) {
         }
     }
 
-    
+    // Repulsion between nodes.
     for (let i = 0; i < notes.length; i++) {
         const a = notes[i];
 
@@ -918,7 +939,7 @@ function updatePhysics(dt) {
         }
     }
 
-   
+    // Integrate velocity.
     for (const node of notes) {
         if (node === activeNode) continue;
 
@@ -937,7 +958,9 @@ function updatePhysics(dt) {
     }
 }
 
-
+// --------------------------------------------------
+// ANIMATION LOOP
+// --------------------------------------------------
 
 function startAnimation() {
     if (animationFrameId !== null) {
@@ -965,7 +988,9 @@ function startAnimation() {
     animationFrameId = requestAnimationFrame(animate);
 }
 
-
+// --------------------------------------------------
+// DRAW GRAPH
+// --------------------------------------------------
 
 function drawGraph() {
     if (!canvas || !ctx) return;
@@ -998,7 +1023,7 @@ function drawGraph() {
         }
     }
 
-
+    // Draw links.
     for (const link of connections) {
         const { source, target } = link;
 
@@ -1026,7 +1051,7 @@ function drawGraph() {
         ctx.stroke();
     }
 
-
+    // Draw nodes and their labels.
     for (const node of notes) {
         drawNode(
             node,
@@ -1047,7 +1072,7 @@ function drawNode(node, isSelected, isConnected) {
         ? Math.max(baseRadius, SELECTED_RADIUS)
         : baseRadius;
 
-
+    // Draw the circle.
     ctx.beginPath();
     ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
 
@@ -1057,7 +1082,7 @@ function drawNode(node, isSelected, isConnected) {
 
     ctx.fill();
 
-
+    // Highlight the selected circle.
     if (isSelected) {
         ctx.beginPath();
         ctx.arc(node.x, node.y, radius + 4, 0, Math.PI * 2);
@@ -1067,6 +1092,8 @@ function drawNode(node, isSelected, isConnected) {
         ctx.stroke();
     }
 
+    // IMPORTANT:
+    // Check visibility BEFORE drawing any label.
     const showLabel =
         labelMode === "always" || isSelected;
 
@@ -1093,7 +1120,9 @@ function drawNode(node, isSelected, isConnected) {
     );
 }
 
-
+// --------------------------------------------------
+// POINTER COORDINATES
+// --------------------------------------------------
 
 function getPointerPosition(event) {
     const rect = canvas.getBoundingClientRect();
@@ -1131,7 +1160,9 @@ function getNoteAt(screenX, screenY) {
     return null;
 }
 
-
+// --------------------------------------------------
+// DRAGGING AND PANNING
+// --------------------------------------------------
 
 function startDrag(event) {
     if (event.button !== 0) return;
@@ -1156,7 +1187,7 @@ function startDrag(event) {
         node.vx = 0;
         node.vy = 0;
 
-        
+        // Draw the selected node last.
         const index = notes.indexOf(node);
 
         if (index !== -1) {
@@ -1218,7 +1249,9 @@ function stopDrag() {
     if (canvas) canvas.style.cursor = "grab";
 }
 
-
+// --------------------------------------------------
+// ZOOMING
+// --------------------------------------------------
 
 function handleZoom(event) {
     event.preventDefault();
@@ -1258,6 +1291,9 @@ function setZoom(value) {
     drawGraph();
 }
 
+// --------------------------------------------------
+// RESET VIEW
+// --------------------------------------------------
 
 function resetView() {
     if (!canvas) return;
@@ -1282,7 +1318,9 @@ function resetView() {
     drawGraph();
 }
 
-
+// --------------------------------------------------
+// UI STATUS
+// --------------------------------------------------
 
 function updateGraphUI() {
     const container = canvas?.closest(".obsidian-graph");
@@ -1327,4 +1365,33 @@ function updateGraphUI() {
 
     selectionLabel.textContent =
         `${selected.title} · ${related.size} linked notes`;
+}
+
+
+// Public API
+const FoamGraph = {
+    init: initializeInspector,
+    pushNode,
+    pushLink,
+    getNode,
+    getNodes,
+    getGraphLinks
+};
+
+// Expose the API globally so consumers don't need imports.
+window.FoamGraph = FoamGraph;
+
+// Automatically initialize when the container exists.
+function autoInitialize() {
+    if (document.getElementById("foam-graph")) {
+        initializeInspector();
+    }
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", autoInitialize, {
+        once: true
+    });
+} else {
+    autoInitialize();
 }
