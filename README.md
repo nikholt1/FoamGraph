@@ -3,7 +3,7 @@
     width="345"
     height="449"
     alt="FoamGraph"
-    src="https://github.com/user-attachments/assets/246f0dc9-98f1-4203-922e-dc3249b25ae3"
+    src="https://raw.githubusercontent.com/nikholt1/FoamGraph/refs/heads/main/foamGraph.png"
   />
 
   <h1>FoamGraph</h1>
