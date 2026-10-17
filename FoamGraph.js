@@ -50,9 +50,7 @@ let connectionNonSelected = "rgba(184, 184, 184, 0.35)";
 
 const graphLinks = [];
 
-// --------------------------------------------------
-// GRAPH DATA API
-// --------------------------------------------------
+
 
 function findNode(id) {
     return notes.find(node => node.id === id);
@@ -178,9 +176,7 @@ export function pushNode(input) {
     return node;
 }
 
-// --------------------------------------------------
-// CONNECTIONS
-// --------------------------------------------------
+
 
 function getConnections() {
     const nodeMap = new Map(notes.map(node => [node.id, node]));
@@ -219,9 +215,7 @@ function getConnections() {
     return connections;
 }
 
-// --------------------------------------------------
-// GRAPH REFRESH
-// --------------------------------------------------
+
 
 function refreshGraph() {
     if (!canvas || !ctx || !canvas.isConnected) return;
@@ -230,9 +224,6 @@ function refreshGraph() {
     drawGraph();
 }
 
-// --------------------------------------------------
-// CIRCULAR BRANCHING LAYOUT
-// --------------------------------------------------
 
 function getNodeRadius(node) {
     return Number.isFinite(node.size) && node.size > 0
@@ -442,9 +433,6 @@ function initializePositions() {
     }
 }
 
-// --------------------------------------------------
-// INITIALIZATION
-// --------------------------------------------------
 
 export function initializeInspector() {
     const container = document.getElementById("inspector-container");
@@ -800,9 +788,7 @@ document.head.appendChild(style);
     document.head.appendChild(style);
 }
 
-// --------------------------------------------------
-// RESIZE
-// --------------------------------------------------
+
 
 function resizeCanvas() {
     if (!canvas || !ctx) return;
@@ -818,9 +804,7 @@ function resizeCanvas() {
     drawGraph();
 }
 
-// --------------------------------------------------
-// WATER PHYSICS
-// --------------------------------------------------
+
 
 function updatePhysics(dt) {
     const step = Math.min(dt / 16.667, 2);
@@ -865,7 +849,7 @@ function updatePhysics(dt) {
         node.vy += fy * step;
     }
 
-    // Size-dependent springs between connected nodes.
+
     for (const { source, target } of connections) {
         const dx = target.x - source.x;
         const dy = target.y - source.y;
@@ -892,7 +876,7 @@ function updatePhysics(dt) {
         }
     }
 
-    // Repulsion between nodes.
+    
     for (let i = 0; i < notes.length; i++) {
         const a = notes[i];
 
@@ -934,7 +918,7 @@ function updatePhysics(dt) {
         }
     }
 
-    // Integrate velocity.
+   
     for (const node of notes) {
         if (node === activeNode) continue;
 
@@ -953,9 +937,7 @@ function updatePhysics(dt) {
     }
 }
 
-// --------------------------------------------------
-// ANIMATION LOOP
-// --------------------------------------------------
+
 
 function startAnimation() {
     if (animationFrameId !== null) {
@@ -983,9 +965,7 @@ function startAnimation() {
     animationFrameId = requestAnimationFrame(animate);
 }
 
-// --------------------------------------------------
-// DRAW GRAPH
-// --------------------------------------------------
+
 
 function drawGraph() {
     if (!canvas || !ctx) return;
@@ -1018,7 +998,7 @@ function drawGraph() {
         }
     }
 
-    // Draw links.
+
     for (const link of connections) {
         const { source, target } = link;
 
@@ -1046,7 +1026,7 @@ function drawGraph() {
         ctx.stroke();
     }
 
-    // Draw nodes and their labels.
+
     for (const node of notes) {
         drawNode(
             node,
@@ -1067,7 +1047,7 @@ function drawNode(node, isSelected, isConnected) {
         ? Math.max(baseRadius, SELECTED_RADIUS)
         : baseRadius;
 
-    // Draw the circle.
+
     ctx.beginPath();
     ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
 
@@ -1077,7 +1057,7 @@ function drawNode(node, isSelected, isConnected) {
 
     ctx.fill();
 
-    // Highlight the selected circle.
+
     if (isSelected) {
         ctx.beginPath();
         ctx.arc(node.x, node.y, radius + 4, 0, Math.PI * 2);
@@ -1087,8 +1067,6 @@ function drawNode(node, isSelected, isConnected) {
         ctx.stroke();
     }
 
-    // IMPORTANT:
-    // Check visibility BEFORE drawing any label.
     const showLabel =
         labelMode === "always" || isSelected;
 
@@ -1115,9 +1093,7 @@ function drawNode(node, isSelected, isConnected) {
     );
 }
 
-// --------------------------------------------------
-// POINTER COORDINATES
-// --------------------------------------------------
+
 
 function getPointerPosition(event) {
     const rect = canvas.getBoundingClientRect();
@@ -1155,9 +1131,7 @@ function getNoteAt(screenX, screenY) {
     return null;
 }
 
-// --------------------------------------------------
-// DRAGGING AND PANNING
-// --------------------------------------------------
+
 
 function startDrag(event) {
     if (event.button !== 0) return;
@@ -1182,7 +1156,7 @@ function startDrag(event) {
         node.vx = 0;
         node.vy = 0;
 
-        // Draw the selected node last.
+        
         const index = notes.indexOf(node);
 
         if (index !== -1) {
@@ -1244,9 +1218,7 @@ function stopDrag() {
     if (canvas) canvas.style.cursor = "grab";
 }
 
-// --------------------------------------------------
-// ZOOMING
-// --------------------------------------------------
+
 
 function handleZoom(event) {
     event.preventDefault();
@@ -1286,9 +1258,6 @@ function setZoom(value) {
     drawGraph();
 }
 
-// --------------------------------------------------
-// RESET VIEW
-// --------------------------------------------------
 
 function resetView() {
     if (!canvas) return;
@@ -1313,9 +1282,7 @@ function resetView() {
     drawGraph();
 }
 
-// --------------------------------------------------
-// UI STATUS
-// --------------------------------------------------
+
 
 function updateGraphUI() {
     const container = canvas?.closest(".obsidian-graph");
