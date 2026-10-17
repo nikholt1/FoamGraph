@@ -14,6 +14,7 @@ Instead of building a graph visualization from scratch, you can import FoamGraph
 - **Relationship mapping:** Define connections between nodes to visualize how your data relates.
 - **Interactive visualization:** Explore and interact with the graph through its visualization interface.
 - **Local or online usage:** Import the library from a local file or reference a hosted version.
+<img width="604" height="541" alt="image" src="https://github.com/user-attachments/assets/18d213ca-de7f-4627-87aa-91b519603688" />
 
 ## How It Works
 
