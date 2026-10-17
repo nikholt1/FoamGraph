@@ -819,7 +819,7 @@ function resizeCanvas() {
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
 
-    initializePositions();
+    //initializePositions();
     drawGraph();
 }
 
