@@ -1,5 +1,13 @@
-# FoamGraph
+<div align="center">
+  <img
+    width="345"
+    height="449"
+    alt="FoamGraph"
+    src="https://github.com/user-attachments/assets/246f0dc9-98f1-4203-922e-dc3249b25ae3"
+  />
 
+  <h1>FoamGraph</h1>
+</div>
 **A lightweight, reusable JavaScript library for interactive graph visualizations.**
 
 FoamGraph makes it easy to integrate an interactive, Obsidian-style graph into any web project. It is designed to be simple to embed, easy to configure, and flexible enough to visualize different types of connected data.
