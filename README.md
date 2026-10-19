@@ -1,7 +1,6 @@
  <div align="center">
   <img
-    width="345"
-    height="449"
+    width="200"
     alt="FoamGraph"
     src="https://raw.githubusercontent.com/nikholt1/FoamGraph/refs/heads/main/foamGraph.png"
   />
