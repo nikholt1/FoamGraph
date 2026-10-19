@@ -20,7 +20,7 @@ Both libraries are designed to be easy to integrate into existing web projects, 
 ### FoamGraph
 
 FoamGraph makes it easy to integrate an interactive, Obsidian-style graph into any web project. It visualizes entities as nodes and their relationships as connections, making it useful for exploring complex structures and interconnected data.
-
+<img width="604" height="541" alt="image" src="https://github.com/user-attachments/assets/18d213ca-de7f-4627-87aa-91b519603688" />
 **Features**
 - **Simple integration:** Mount the graph inside a designated HTML element.
 - **Reusable:** Integrate it into existing or new web projects.
