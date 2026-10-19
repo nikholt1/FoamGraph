@@ -6,7 +6,7 @@
     src="https://raw.githubusercontent.com/nikholt1/FoamGraph/refs/heads/main/foamGraph.png"
   />
 
-  <h1>FoamGraph & XYGraph</h1>
+  <h1>FoamGraph</h1>
 </div>
 
 **Lightweight, reusable JavaScript libraries for interactive graph and data visualization.**
