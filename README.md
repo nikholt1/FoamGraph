@@ -1,4 +1,4 @@
-<div align="center">
+ <div align="center">
   <img
     width="345"
     height="449"
@@ -6,113 +6,154 @@
     src="https://raw.githubusercontent.com/nikholt1/FoamGraph/refs/heads/main/foamGraph.png"
   />
 
-  <h1>FoamGraph</h1>
+  <h1>FoamGraph & XYGraph</h1>
 </div>
-**A lightweight, reusable JavaScript library for interactive graph visualizations.**
 
-FoamGraph makes it easy to integrate an interactive, Obsidian-style graph into any web project. It is designed to be simple to embed, easy to configure, and flexible enough to visualize different types of connected data.
+**Lightweight, reusable JavaScript libraries for interactive graph and data visualization.**
 
-Instead of building a graph visualization from scratch, you can import FoamGraph, provide a designated HTML element, and populate the graph with your own nodes and relationships.
+This repository contains two standalone JavaScript libraries: **FoamGraph**, for visualizing connected data as an interactive graph, and **XYGraph**, for plotting data on a two-dimensional X–Y coordinate system.
 
-## Features
+Both libraries are designed to be easy to integrate into existing web projects, with minimal setup and no need to build visualization functionality from scratch.
 
-- **Simple integration:** Place a `<div id="form-graph"></div>` wherever you want the graph to appear.
-- **Reusable:** Integrate the library into existing or new web projects.
+## Libraries
+
+### FoamGraph
+
+FoamGraph makes it easy to integrate an interactive, Obsidian-style graph into any web project. It visualizes entities as nodes and their relationships as connections, making it useful for exploring complex structures and interconnected data.
+
+**Features**
+- **Simple integration:** Mount the graph inside a designated HTML element.
+- **Reusable:** Integrate it into existing or new web projects.
 - **Flexible data:** Represent notes, files, components, or other entities as connected nodes.
-- **Relationship mapping:** Define connections between nodes to visualize how your data relates.
-- **Interactive visualization:** Explore and interact with the graph through its visualization interface.
-- **Local or online usage:** Import the library from a local file or reference a hosted version.
-<img width="604" height="541" alt="image" src="https://github.com/user-attachments/assets/18d213ca-de7f-4627-87aa-91b519603688" />
+- **Relationship mapping:** Define hierarchical relationships and additional connections.
+- **Interactive visualization:** Explore, select, drag, and navigate nodes.
+- **Local or online usage:** Import the library from a local file or a hosted CDN.
 
-## How It Works
+**Documentation:** [FoamGraph README](https://github.com/nikholt1/FoamGraph/blob/main/FoamGraph.md)
 
-FoamGraph is built with JavaScript, HTML, and CSS. JavaScript handles the graph's data, relationships, rendering, and interaction logic, while HTML provides the mounting point and CSS controls its presentation.
+### XYGraph
 
-The library separates the visualization engine from the application using it. Your application supplies the data, while FoamGraph handles displaying that data as a graph.
+XYGraph is a lightweight JavaScript plotting library for visualizing numerical data on a two-dimensional X–Y coordinate system. It supports multiple plot types and configurable axes, colors, and interactions.
 
-The graph is mounted inside a specific HTML element identified by `form-graph`. This means you can position it anywhere in your existing page layout without restructuring the rest of your application.
+**Features**
+- **Simple plotting API:** Add data points using `XYGraph.plot(x, y)`.
+- **Multiple plot types:** Line, scatter, pillar, bar, area, step, stem, and smooth plots.
+- **Configurable axes:** Set axis labels and minimum or maximum values.
+- **Interactive navigation:** Support for dragging and zooming.
+- **Custom styling:** Configure plot colors, grid lines, axes, and point appearance.
+- **Local or online usage:** Import the library from a local file or a hosted CDN.
 
-```html
-<div id="form-graph"></div>
-```
-
-The element can be placed inside a section, a dashboard, a sidebar, or any other container in your application. FoamGraph uses that element as its rendering target.
+**Documentation:** [XYGraph README](https://github.com/nikholt1/FoamGraph/blob/main/XYGraph.md)
 
 ## Getting Started
 
-FoamGraph supports two integration approaches, depending on how you want to use the library.
+Both libraries can be integrated independently. Use only the library that fits your application's visualization needs.
 
-### 1. Local Integration
+### 1. FoamGraph Integration
 
-Download or copy the FoamGraph.js file and place it in your repository. Reference it in your HTML or JavaScript.
-
-See [`local.html`](./local.html) for a ready-to-use example of local integration.
-
-### 2. Online Integration
-
-### 2. Online Integration
-
-Import FoamGraph directly from this repository using jsDelivr. This allows you to integrate the library into your project without downloading or copying the source files.
-
-```javascript
-import "https://cdn.jsdelivr.net/gh/nikholt1/FoamGraph@main/FoamGraph.js";
-```
-
-Add the required graph container to your HTML:
+Add a container to your HTML:
 
 ```html
-<div id="form-graph"></div>
+<div id="foam-graph" style="width: 100%; height: 600px;"></div>
 ```
 
-FoamGraph can then be integrated into your existing application using its API.
+Import FoamGraph from jsDelivr and populate it through its API:
 
+```html
+<script type="module">
+  import "https://cdn.jsdelivr.net/gh/nikholt1/FoamGraph@main/FoamGraph.js";
 
-See [`online.html`](./online.html) for a ready-to-use example of online integration.
+  window.FoamGraph.pushNode({
+    id: "project",
+    title: "My Project"
+  });
 
-Both examples demonstrate how to get the graph running quickly. Use them as starting points when integrating FoamGraph into your own system.
+  window.FoamGraph.pushNode({
+    id: "frontend",
+    title: "Frontend",
+    parentId: "project"
+  });
 
-## Providing Data
+  window.FoamGraph.pushNode({
+    id: "backend",
+    title: "Backend",
+    parentId: "project"
+  });
+</script>
+```
 
-FoamGraph represents information as nodes and relationships. Each node can contain identifying information, a display title, and optional configuration such as its size, color, parent, or connections, depending on the supported API.
+FoamGraph handles the graph rendering and interaction, while your application provides the data.
 
-For example, a graph representing a software project could contain nodes for the entry point, JavaScript modules, HTML pages, and external services. Connections between these nodes can represent imports, dependencies, or navigation paths.
+### 2. XYGraph Integration
 
-Your application remains responsible for deciding what the data represents. FoamGraph provides the visualization layer that turns that data into a connected graph.
+Add a container to your HTML:
 
-Refer to the source code and integration examples for the exact data structure and available methods.
+```html
+<div id="xy-graph" style="width: 100%; height: 400px;"></div>
+```
 
-## Integration Concept
+Import XYGraph and plot data points:
 
-The basic integration follows three steps:
+```html
+<script type="module">
+  import XYGraph from "https://cdn.jsdelivr.net/gh/nikholt1/FoamGraph@main/XYGraph.js";
 
-1. Add `<div id="form-graph"></div>` wherever the graph should appear.
-2. Import or reference the FoamGraph library and its required resources.
-3. Initialize the graph and supply your nodes and relationships using its API.
+  XYGraph.setType = "line";
+  XYGraph.setX = "X";
+  XYGraph.setY = "Y";
 
-Once integrated, the graph becomes part of your existing application rather than a separate page or application of its own.
+  XYGraph.plot(0, 0);
+  XYGraph.plot(1, 4);
+  XYGraph.plot(2, 7);
+  XYGraph.plot(3, 5);
+  XYGraph.plot(4, 10);
+</script>
+```
+
+XYGraph handles the coordinate system, plotting, and configured interactions. Your application supplies the numerical data.
+
+## How They Work
+
+Both libraries are built with JavaScript, HTML, and CSS, but serve different visualization purposes.
+
+| Library | Visualization | Typical data |
+| --- | --- | --- |
+| **FoamGraph** | Interactive node-and-link graph | Entities, relationships, dependencies |
+| **XYGraph** | Two-dimensional X–Y plot | Numerical points, measurements, trends |
+
+The libraries separate visualization logic from application logic. Your application determines what the data represents, while the selected library renders it in a visual format.
 
 ## Use Cases
 
-FoamGraph can be used to visualize:
-
+**FoamGraph**
 - Knowledge graphs and interconnected notes.
 - Software architecture and module dependencies.
 - Repository structures and file relationships.
 - Project data and related entities.
-- Any dataset that can be represented as nodes and connections.
+- Exploring relationships within complex systems.
 
-### Example: Portfolio Website
+**XYGraph**
+- Plotting mathematical functions and datasets.
+- Visualizing measurements and experimental results.
+- Comparing numerical values and trends.
+- Displaying time-series or other ordered data.
+- Embedding charts in dashboards and web applications.
 
-FoamGraph is used in my [Portfolio Website](https://nikholt1.github.io/#github) to visualize the structure of the website and show how its different components and files relate to each other.
+## Portfolio Integration
 
-This demonstrates how FoamGraph can be integrated into a real project to explore and visualize the relationships within an existing system.
-## Examples
+FoamGraph is used in my [Portfolio Website](https://nikholt1.github.io/#github) to visualize the structure of the website and show how its components and files relate to each other.
 
-| Example | Description |
+This demonstrates how the library can be integrated into a real project to explore and visualize relationships within an existing system.
+
+## Documentation
+
+| Resource | Description |
 | --- | --- |
-| [`local.html`](./local.html) | Integrate FoamGraph using local files. |
-| [`online.html`](./online.html) | Integrate FoamGraph using an online-hosted version. |
+| [FoamGraph.md](https://github.com/nikholt1/FoamGraph/blob/main/FoamGraph.md) | FoamGraph setup, API, configuration, and graph functionality. |
+| [XYGraph.md](https://github.com/nikholt1/FoamGraph/blob/main/XYGraph.md) | XYGraph setup, plotting methods, plot types, and configuration. |
 
 ## Project Goal
 
-FoamGraph aims to make interactive graph visualization accessible through a reusable, easy-to-integrate JavaScript library. By keeping the graph engine separate from the application data, it can be adapted to different projects without requiring each application to implement its own visualization system.
+The goal of these libraries is to make interactive visualization accessible through reusable, easy-to-integrate JavaScript components.
+
+FoamGraph focuses on **relationships and connected structures**, while XYGraph focuses on **numerical data and coordinate-based plotting**. Together, they provide two distinct visualization approaches that can be integrated into a wide range of web projects.
