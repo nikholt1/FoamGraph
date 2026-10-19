@@ -36,7 +36,7 @@ FoamGraph makes it easy to integrate an interactive, Obsidian-style graph into a
 
 XYGraph is a lightweight JavaScript plotting library for visualizing numerical data on a two-dimensional X–Y coordinate system. It supports multiple plot types and configurable axes, colors, and interactions.
 
-<img width="604" height="541" alt="image" src="https://github.com/user-attachments/assets/d92f6611-283b-46f1-9468-8ca2e5b575f3" />
+<img width="604" alt="image" src="https://github.com/user-attachments/assets/d92f6611-283b-46f1-9468-8ca2e5b575f3" />
 
 
 **Features**
