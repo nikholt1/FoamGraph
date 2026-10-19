@@ -346,6 +346,4 @@ Destroys the current graph instance and its associated rendering resources.
 </html>
 ```
 
-## License
 
-Specify your chosen open-source license here, such as the MIT License.

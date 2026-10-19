@@ -21,6 +21,19 @@
     </style>
 </head>
 <body>
+            <label>
+            Chart type
+            <select id="chartType" style="padding: 8px; margin-left: 6px;">
+                <option value="line">Line</option>
+                <option value="scatter">Scatter</option>
+                <option value="pillar">Pillar</option>
+                <option value="bar">Horizontal bar</option>
+                <option value="area">Area</option>
+                <option value="step">Step</option>
+                <option value="stem">Stem</option>
+                <option value="smooth">Smooth</option>
+            </select>
+        </label>
 <button id="resetView" type="button">Reset View</button>
     <div id="xy-graph"></div>
 
@@ -58,7 +71,13 @@
         for (const [x, y] of points) {
             XYGraph.plot(x, y);
         }
+        const typeSelect = document.getElementById("chartType");
+        const status = document.getElementById("status");
 
+        typeSelect.addEventListener("change", () => {
+            XYGraph.setType = typeSelect.value;
+            status.textContent = `Chart type: ${typeSelect.value}`;
+        });
         document
             .getElementById("resetView")
             .addEventListener("click", () => {

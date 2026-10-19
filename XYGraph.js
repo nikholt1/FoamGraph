@@ -1,8 +1,5 @@
 
-// ============================================================
-// XYGraph.js — Dependency-free 2D plotting library
-// Supports per-point colors through plot(x, y, color)
-// ============================================================
+
 
 const CONFIG = {
     type: "line",
@@ -167,7 +164,7 @@ function dataExtents() {
 function autoBounds() {
     let { minX, maxX, minY, maxY } = dataExtents();
 
-    // Keep (0, 0) visible in automatic mode.
+    
     minX = Math.min(0, minX);
     maxX = Math.max(0, maxX);
     minY = Math.min(0, minY);
@@ -179,7 +176,7 @@ function autoBounds() {
     if (rangeX === 0) rangeX = 10;
     if (rangeY === 0) rangeY = 10;
 
-    // Add padding only on the sides away from the origin.
+    
     if (minX < 0) minX -= rangeX * 0.05;
     if (maxX > 0) maxX += rangeX * 0.05;
     if (minY < 0) minY -= rangeY * 0.05;
@@ -243,9 +240,7 @@ function formatTick(value) {
     return Number(value.toPrecision(5)).toString();
 }
 
-// ------------------------------------------------------------
-// GRID AND AXES
-// ------------------------------------------------------------
+
 
 function drawGrid(bounds, rect) {
     const width = rect.right - rect.left;
@@ -372,11 +367,7 @@ function zeroX(bounds, rect) {
     return toCanvasX(clamp(0, bounds.minX, bounds.maxX), bounds, rect);
 }
 
-// ------------------------------------------------------------
-// COLOR HELPERS
-// ------------------------------------------------------------
 
-// A point's own color wins; otherwise use the chart's default.
 function pointColor(point, fallback) {
     return point.color ?? fallback;
 }
@@ -393,8 +384,7 @@ function drawPoints(bounds, rect) {
     }
 }
 
-// Draw individual line segments so each segment can have its own color.
-// The segment uses the destination point's color, or the default line color.
+
 function drawColoredSegments(bounds, rect, mode = "line") {
     if (data.length < 2) return;
 
@@ -427,9 +417,7 @@ function drawColoredSegments(bounds, rect, mode = "line") {
     }
 }
 
-// ------------------------------------------------------------
-// CHART RENDERERS
-// ------------------------------------------------------------
+
 
 function drawLine(bounds, rect) {
     if (!data.length) return;
@@ -618,7 +606,7 @@ function drawSmooth(bounds, rect) {
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
 
-    // Render each smooth segment separately to support individual colors.
+    
     for (let i = 0; i < points.length - 1; i++) {
         const previous = points[Math.max(0, i - 1)];
         const current = points[i];
@@ -644,9 +632,7 @@ function drawSmooth(bounds, rect) {
     drawPoints(bounds, rect);
 }
 
-// ------------------------------------------------------------
-// MAIN RENDER
-// ------------------------------------------------------------
+
 
 function render() {
     if (!ctx || !canvas || destroyed) return;
@@ -694,9 +680,7 @@ function render() {
     });
 }
 
-// ------------------------------------------------------------
-// PAN AND ZOOM
-// ------------------------------------------------------------
+
 
 function onPointerDown(event) {
     if (!CONFIG.drag) return;
@@ -783,19 +767,10 @@ function onWheel(event) {
     scheduleRender();
 }
 
-// ------------------------------------------------------------
-// PUBLIC API
-// ------------------------------------------------------------
+
 
 const XYGraph = {
-    /**
-     * Plot a point.
-     *
-     * XYGraph.plot(x, y)
-     * XYGraph.plot(x, y, "#ff5252")
-     *
-     * If color is omitted, the chart's configured default is used.
-     */
+
     plot(x, y, color) {
         x = Number(x);
         y = Number(y);
@@ -823,7 +798,7 @@ const XYGraph = {
             data.splice(0, data.length - CONFIG.maxPoints);
         }
 
-        // Automatic mode fits the new data. Manual view stays unchanged.
+        
         scheduleRender();
     },
 
@@ -872,9 +847,7 @@ const XYGraph = {
     }
 };
 
-// ------------------------------------------------------------
-// CONFIGURATION PROPERTIES
-// ------------------------------------------------------------
+
 
 const propertyMap = {
     setType: "type",
