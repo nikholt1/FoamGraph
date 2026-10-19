@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYGraph Example</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 24px;
+            background: #050505;
+            color: #dcddde;
+            font-family: Arial, sans-serif;
+        }
+
+        #xy-graph {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<button id="resetView" type="button">Reset View</button>
+    <div id="xy-graph"></div>
+
+    <script type="module">
+        import XYGraph from "https://cdn.jsdelivr.net/gh/nikholt1/FoamGraph@main/XYGraph.js";
+
+        XYGraph.setType = "area";
+
+        XYGraph.setX = "Time";
+        XYGraph.setY = "Value";
+
+        XYGraph.setXMin = 0;
+        XYGraph.setYMin = 0;
+
+        XYGraph.setXMax = "plotMax";
+        XYGraph.setYMax = "plotMax";
+
+        XYGraph.setDrag = true;
+        XYGraph.setZoom = true;
+        XYGraph.setFill = true;
+
+        const points = [
+            [0, 0],
+            [1, 4],
+            [2, 7],
+            [3, 5],
+            [4, 10],
+            [5, 8],
+            [6, 13],
+            [7, 11],
+            [8, 16],
+            [9, 14]
+        ];
+
+        for (const [x, y] of points) {
+            XYGraph.plot(x, y);
+        }
+
+        document
+            .getElementById("resetView")
+            .addEventListener("click", () => {
+                XYGraph.resetView();
+            });
+    </script>
+</body>
